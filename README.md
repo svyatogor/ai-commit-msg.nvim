@@ -1,6 +1,5 @@
 # ai-commit-msg.nvim
 
-[![StandWithPalestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/StandWithPalestine.svg)](https://github.com/Safouene1/support-palestine-banner/blob/master/Markdown-pages/Support.md)
 [![test](https://github.com/aweis89/ai-commit-msg.nvim/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/aweis89/ai-commit-msg.nvim/actions/workflows/test.yml)
 [![lint-test](https://github.com/aweis89/ai-commit-msg.nvim/actions/workflows/lint-test.yml/badge.svg?branch=main)](https://github.com/aweis89/ai-commit-msg.nvim/actions/workflows/lint-test.yml)
 
@@ -11,7 +10,6 @@ run `git commit -v`, letting you review your changes while the AI crafts the
 perfect commit message.
 
 <img width="1512" height="943" alt="Screenshot 2025-09-01 at 3 22 28 PM" src="https://github.com/user-attachments/assets/790e66cc-733b-49bf-bd85-d9d5be359a46" />
-
 
 ## Features
 
@@ -115,10 +113,10 @@ git config --global core.editor nvim
 require("ai_commit_msg").setup({
   -- Enable/disable the plugin
   enabled = true,
-  
+
   -- AI provider to use ("gemini", "openai", "anthropic", or "copilot")
   provider = "gemini",
-  
+
   -- Whether to prompt for push after commit
   auto_push_prompt = true,
   -- Pull-before-push behavior (helps avoid rejected pushes)
@@ -126,24 +124,24 @@ require("ai_commit_msg").setup({
     enabled = true,                     -- run a pull before pushing
     args = { "--rebase", "--autostash" }, -- arguments passed to `git pull`
   },
-  
+
   -- Show spinner while generating
   spinner = true,
-  
+
   -- Show notifications
   notifications = true,
-  
+
   -- Number of surrounding lines to include in git diff (default: 5)
   context_lines = 5,
-  
+
   -- Cost display format ("compact", "verbose", or false to disable)
   cost_display = "compact",
-  
+
   -- Keymaps for commit buffer
   keymaps = {
     quit = "q",  -- Set to false to disable
   },
-  
+
   -- Provider-specific configurations
   providers = {
     openai = {
@@ -325,10 +323,10 @@ git commit -v  # Opens Neovim with diff visible, AI generates message while you 
    - Sends the diff to your configured AI provider's API with your configured prompt
    - Inserts the generated message into the commit buffer
    - The `-v` flag shows the diff below the message,
-   allowing you to review changes during commit generation
+     allowing you to review changes during commit generation
 
 2. If the buffer already has content (e.g., from a commit template),
-the AI-generated message is added as comments below for reference.
+   the AI-generated message is added as comments below for reference.
 
 3. After you save and close the commit buffer, the plugin:
    - Checks if the commit was successful (not cancelled or empty)
