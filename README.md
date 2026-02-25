@@ -13,11 +13,11 @@ perfect commit message.
 
 ## Features
 
-- 🤖 Automatically generates commit messages using Gemini, OpenAI, Anthropic, or GitHub Copilot APIs
+- 🤖 Automatically generates commit messages using Gemini, OpenAI, Anthropic, GitHub Copilot, or Claude Code CLI
   when you run `git commit -v`
 - 🎯 Works from terminal or within Neovim (using vim-fugitive)
 - 🤝 Non-intrusive - if you start typing, AI suggestions are added as comments instead
-- 🔑 Uses `GEMINI_API_KEY`, `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY` environment variables for authentication
+- 🔑 Uses `GEMINI_API_KEY`, `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY` environment variables for authentication; `claude_code` uses the local `claude` CLI (no API key required)
 - ⚙️ Configurable model, temperature, and max tokens
 - 🔄 Optional push prompt after successful commits
 - ⬇️⬆️ Pull before push to reduce rejections (configurable with args)
@@ -89,7 +89,7 @@ export GEMINI_API_KEY="your-api-key-here"
 export OPENAI_API_KEY="your-api-key-here"
 ```
 
-**For Anthropic:**
+**For GitHub Copilot:**
 
 ```bash
 export COPILOT_TOKEN="your-github-copilot-token-here"
@@ -100,6 +100,10 @@ export COPILOT_TOKEN="your-github-copilot-token-here"
 ```bash
 export ANTHROPIC_API_KEY="your-api-key-here"
 ```
+
+**For Claude Code (no API key required):**
+
+Install the `claude` CLI: https://docs.anthropic.com/en/docs/claude-code
 
 1. Configure Neovim as your Git editor:
 
@@ -114,7 +118,7 @@ require("ai_commit_msg").setup({
   -- Enable/disable the plugin
   enabled = true,
 
-  -- AI provider to use ("gemini", "openai", "anthropic", or "copilot")
+  -- AI provider to use ("gemini", "openai", "anthropic", "copilot", or "claude_code")
   provider = "gemini",
 
   -- Whether to prompt for push after commit
@@ -182,11 +186,16 @@ require("ai_commit_msg").setup({
         },
       },
     },
-  },
-  copilot = {
-    model = "gpt-5-mini",
-    max_tokens = 10000,
-    reasoning_effort = "minimal",
+    copilot = {
+      model = "gpt-4.1",
+      max_tokens = nil,
+    },
+    claude_code = {
+      -- Model shorthand passed to `--model` flag of the claude CLI
+      -- e.g. "sonnet", "haiku", "opus", or a full model ID
+      model = "sonnet",
+      system_prompt = nil, -- Override to customize commit message generation instructions
+    },
   },
 })
 ```
@@ -201,7 +210,18 @@ require("ai_commit_msg").setup({
 })
 ```
 
-### Switch to Anthropic Claude
+### Switch to Claude Code (local CLI, no API key)
+
+```lua
+require("ai_commit_msg").setup({
+  provider = "claude_code",
+  providers = {
+    claude_code = {
+      model = "sonnet",  -- or "haiku", "opus", or a full model ID
+    },
+  },
+})
+```
 
 ### Switch to GitHub Copilot
 
@@ -341,17 +361,19 @@ git config --global core.editor nvim
 ## Requirements
 
 - Neovim >= 0.7.0
-- AI provider API key:
+- AI provider API key (one of):
   - Gemini: Set `GEMINI_API_KEY` environment variable (default, best value)
   - OpenAI: Set `OPENAI_API_KEY` environment variable
   - Anthropic: Set `ANTHROPIC_API_KEY` environment variable
   - GitHub Copilot: Set `COPILOT_TOKEN` environment variable
+  - Claude Code: Install `claude` CLI (no API key required)
 - Git
-- curl (for making API requests)
+- curl (for API providers)
 
 ## Tips
 
-- The plugin uses Gemini API, OpenAI Chat Completions API, and Anthropic Messages API directly
+- The plugin uses Gemini API, OpenAI Chat Completions API, Anthropic Messages API, and the `claude` CLI directly
+- The `claude_code` provider requires no API key — it runs the `claude` CLI locally and is a good choice if you already have Claude Code installed
 - Lower temperature values (0.1-0.3) produce more consistent commit messages
 - Higher temperature values (0.5-0.8) produce more creative variations
 - The default model `gemini-2.5-flash-lite` provides excellent results at a very low cost
