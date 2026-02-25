@@ -276,7 +276,7 @@ Note on quality vs cost: Using OpenAI `gpt-5-mini` or `gpt-4.1-mini` (faster) ge
 
 ## Commands
 
-- `:AiCommitMsg` - Manually generate a commit message (prints to messages)
+- `:AiCommitMsg [context]` - Generate a commit message and insert it at the cursor. Optional `context` provides hints to the AI (e.g., `:AiCommitMsg migrating auth to JWT`)
 - `:AiCommitMsgDisable` - Disable automatic commit message generation
 - `:AiCommitMsgEnable` - Enable automatic commit message generation
 - `:AiCommitMsgAllModels` - Generate commit messages across all configured provider models for your staged diff; opens a buffer with per-model results, timing, and (when pricing is configured) estimated cost — useful for model selection

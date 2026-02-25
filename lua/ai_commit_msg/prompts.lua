@@ -112,6 +112,8 @@ When to use multi-line commits (with bullet-style body and/or footers):
 
 Input:
 - The user prompt will contain a git diff, summary, or task description of changes.
+- The prompt may include optional user-provided context before the diff. Use it to
+  inform type, scope, and description choices.
 
 Task:
 1) Determine the correct type, optional scope, and whether the change is breaking.
@@ -197,6 +199,7 @@ Specification:
   (still keep <= 72 characters); omit the body line about the hash in this short mode.
 
 Rules:
+- If user-provided context appears before the diff, use it to guide the message.
 - Describe only what actually changed in the diff; avoid extra context.
 - Prefer specific nouns over vague phrasing (e.g., "button label" over "text").
 - Do not mention files unless it clarifies scope succinctly.
@@ -226,6 +229,7 @@ FORMAT:
 TYPES: feat fix docs style refactor perf test build ci chore revert
 
 RULES:
+0. If user context precedes the diff, use it to guide type/scope/description.
 1. Header <= 72 chars. Imperative mood ("add" not "added"). No period.
 2. Scope: lowercase, parenthesized, pick the primary area changed.
 3. Include 2-4 body bullets for any non-trivial change. Each bullet starts with "- ".

@@ -116,7 +116,7 @@ function M.setup(opts)
   end
 end
 
-function M.generate_commit_message(callback)
+function M.generate_commit_message(callback, context)
   local active_config = M.get_active_provider_config()
   -- Merge provider-specific config with global settings needed by generator
   local complete_config = vim.tbl_deep_extend("force", active_config, {
@@ -125,6 +125,10 @@ function M.generate_commit_message(callback)
     context_lines = M.config.context_lines,
     cost_display = M.config.cost_display,
   })
+  -- Prepend user context to the prompt template so providers see it naturally
+  if context and context ~= "" then
+    complete_config.prompt = "User context: " .. context .. "\n\n" .. complete_config.prompt
+  end
   require("ai_commit_msg.generator").generate(complete_config, callback)
 end
 

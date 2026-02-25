@@ -13,13 +13,23 @@ local cfg_notify = require("ai_commit_msg.config").notify
 cfg_notify("ai-commit-msg.nvim: Plugin loaded", vim.log.levels.DEBUG)
 
 -- Create user commands
-vim.api.nvim_create_user_command("AiCommitMsg", function()
+vim.api.nvim_create_user_command("AiCommitMsg", function(opts)
+  local context = opts.args ~= "" and opts.args or nil
+  local buf = vim.api.nvim_get_current_buf()
+  local row = vim.api.nvim_win_get_cursor(0)[1]
   require("ai_commit_msg").generate_commit_message(function(success, message)
     if success then
-      print(message)
+      vim.schedule(function()
+        local cur_line = vim.api.nvim_buf_get_lines(buf, row - 1, row, false)[1]
+        if cur_line == nil or vim.fn.trim(cur_line) == "" then
+          vim.api.nvim_buf_set_lines(buf, row - 1, row, false, vim.split(message, "\n"))
+        else
+          vim.api.nvim_buf_set_lines(buf, row, row, false, vim.split(message, "\n"))
+        end
+      end)
     end
-  end)
-end, { desc = "Generate AI commit message" })
+  end, context)
+end, { desc = "Generate AI commit message", nargs = "?" })
 
 vim.api.nvim_create_user_command("AiCommitMsgDisable", function()
   require("ai_commit_msg").disable()
